@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stick_together_app/components/textfield.dart';
+import 'package:stick_together_app/register_page.dart';
 
 class LoginPage extends StatelessWidget {
   final usernameController = TextEditingController();
@@ -21,7 +22,7 @@ class LoginPage extends StatelessWidget {
               height: 50,
             ),
             //Introduction
-            Text("Welcome Back", style: TextStyle(fontSize: 16)),
+            Text("Welcome Back :P", style: TextStyle(fontSize: 23)),
             //fill texts
             SizedBox(
               height: 50,
@@ -80,7 +81,12 @@ class LoginPage extends StatelessWidget {
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.amber)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage()));
+                      },
                       child: const Text("Sign Up")),
                 ),
               ],
