@@ -15,8 +15,16 @@ class RegisterPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back)),
+            ),
             SizedBox(
-              height: 70,
+              height: 50,
             ),
             Text("StickTogether",
                 style: TextStyle(color: Colors.amber, fontSize: 30)),
