@@ -10,9 +10,17 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("StickTogether",
+            style: TextStyle(
+              color: Colors.amber,
+            )),
+      ),
       body: Center(
         child: Container(
           child: Column(
@@ -37,6 +45,13 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.sticky_note_2), label: "New Sticky Note"),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline), label: "Profile"),
+      ]),
     );
   }
 }
