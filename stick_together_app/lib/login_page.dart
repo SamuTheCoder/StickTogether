@@ -4,8 +4,8 @@ import 'package:stick_together_app/home_page.dart';
 import 'package:stick_together_app/register_page.dart';
 
 class LoginPage extends StatelessWidget {
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   LoginPage({super.key});
 
   @override
@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
               height: 50,
             ),
             DefaultTextField(
-                controller: usernameController,
+                controller: _usernameController,
                 hintText: 'Username',
                 obscureText: false),
 
@@ -37,7 +37,7 @@ class LoginPage extends StatelessWidget {
               height: 10,
             ),
             DefaultTextField(
-                controller: passwordController,
+                controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true),
 
