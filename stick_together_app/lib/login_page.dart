@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stick_together_app/components/textfield.dart';
-import 'package:stick_together_app/map_page.dart';
+import 'package:stick_together_app/home_page.dart';
 import 'package:stick_together_app/register_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -69,8 +69,10 @@ class LoginPage extends StatelessWidget {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.amber)),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => MapPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
                       },
                       child: const Text("Sign In")),
                 ),

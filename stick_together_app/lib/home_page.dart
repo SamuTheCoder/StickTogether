@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -45,13 +45,20 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.sticky_note_2), label: "New Sticky Note"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline), label: "Profile"),
-      ]),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.sticky_note_2), label: "New Sticky Note"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline), label: "Profile"),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     );
   }
 }
