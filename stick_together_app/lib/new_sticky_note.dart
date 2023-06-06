@@ -24,34 +24,67 @@ class _NewStickyPageState extends State<NewStickyPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(15.0),
       child: Column(
         children: [
-          Row(children: [
-            Text("Time that the sticker will last: "),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 7),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(10)),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _currentTimeSpan,
-                  items: timeSpans
-                      .map<DropdownMenuItem<String>>(buildMenuItem)
-                      .toList(),
-                  onChanged: (value) => setState(() {
-                    _currentTimeSpan = value;
-                  }),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(children: [
+              Text(
+                "Sticky Note's TimeSpan:  ",
+                style: TextStyle(fontSize: 15),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 7),
+                decoration: BoxDecoration(),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _currentTimeSpan,
+                    style: TextStyle(fontSize: 15),
+                    items: timeSpans
+                        .map<DropdownMenuItem<String>>(buildMenuItem)
+                        .toList(),
+                    onChanged: (value) => setState(() {
+                      _currentTimeSpan = value;
+                    }),
+                  ),
                 ),
               ),
-            ),
-          ]),
-          SizedBox(height: 20),
-          DefaultTextField(
-            controller: _descriptionController,
-            hintText: "Write your Sticky Note",
-            obscureText: false,
+            ]),
           ),
+          SizedBox(height: 20),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Description:",
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey, width: 2),
+            ),
+            child: TextField(
+              controller: _descriptionController,
+              obscureText: false,
+              maxLines: 3,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Center(
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.amber)),
+                onPressed: () {},
+                child: const Text("Create Sticky Note")),
+          )
         ],
       ),
     );
