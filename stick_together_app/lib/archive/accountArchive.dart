@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:stick_together_app/database/db.dart';
+import 'package:stick_together_app/database/CreateTable.dart';
 import 'package:stick_together_app/models/Position.dart';
 
 class AccountAcrchive extends ChangeNotifier {
