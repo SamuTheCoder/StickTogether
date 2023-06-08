@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:stick_together_app/edit_profile_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,6 +15,20 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       margin: EdgeInsets.all(15.0),
       child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(),
+                      ));
+                },
+                icon: Icon(Icons.edit))
+          ],
+        ),
         Align(
           alignment: Alignment.topCenter,
           child: CircleAvatar(
