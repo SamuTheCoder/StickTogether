@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:stick_together_app/components/textfield.dart';
 
 class RegisterPage extends StatelessWidget {
-  final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final repeatPasswordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _repeatPasswordController = TextEditingController();
 
   RegisterPage({super.key});
 
@@ -37,32 +37,96 @@ class RegisterPage extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
-            DefaultTextField(
-                controller: usernameController,
-                hintText: 'Username',
-                obscureText: false),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: _nameController,
+                  obscureText: false,
+                  style: TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.amber)),
+                    hintText: "Name",
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(
               height: 10,
             ),
-            DefaultTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: _emailController,
+                  obscureText: false,
+                  style: TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.amber)),
+                    hintText: "Email",
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(
               height: 10,
             ),
-            DefaultTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  style: TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.amber)),
+                    hintText: "Password",
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(
               height: 10,
             ),
-            DefaultTextField(
-                controller: repeatPasswordController,
-                hintText: 'Repeat Password',
-                obscureText: true),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: _repeatPasswordController,
+                  obscureText: true,
+                  style: TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.amber)),
+                    hintText: "Repeat Password",
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(
               height: 10,

@@ -17,13 +17,13 @@ class AccountAcrchive extends ChangeNotifier {
   }
 
   _getAccount() async {
-    db = await DB.instance.database;
+    //db = await DB.instance.database;
     List acnt = await db.query('account');
     notifyListeners();
   }
 
   setData(List<Position> user) async {
-    db = await DB.instance.database;
+    //db = await DB.instance.database;
     db.update('account',
         {'userName': user[0], 'email': user[1], 'password': user[2]});
     notifyListeners();

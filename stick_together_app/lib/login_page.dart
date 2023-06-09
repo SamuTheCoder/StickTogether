@@ -28,18 +28,49 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
-            DefaultTextField(
-                controller: _usernameController,
-                hintText: 'Username',
-                obscureText: false),
-
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: _usernameController,
+                  obscureText: false,
+                  style: TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.amber)),
+                    hintText: "Username",
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(
               height: 10,
             ),
-            DefaultTextField(
-                controller: _passwordController,
-                hintText: 'Password',
-                obscureText: true),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  style: TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.amber)),
+                    hintText: "Password",
+                  ),
+                ),
+              ),
+            ),
 
             //forgot password
             const SizedBox(
