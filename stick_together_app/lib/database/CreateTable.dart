@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
+import 'package:sqflite_common/sqflite.dart';
+import 'dart:core';
 import 'package:path_provider/path_provider.dart';
 
 class DB {
   DB._privateConstructor();
   static final DB instance = DB._privateConstructor();
+  static late DatabaseFactory databaseF;
   static Database? _database;
   /*
   get database async {
@@ -16,6 +18,7 @@ class DB {
     return await _initDatabase();
   }
   */
+
   static Future<Database> _initDatabase() async {
     WidgetsFlutterBinding.ensureInitialized();
     final databasePath = await getDatabasesPath();
@@ -50,6 +53,7 @@ class DB {
       note TEXT,
       location TEXT,
       date TEXT,
+      expire_timestamp INTEGER,
       FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
       )
         """);
@@ -107,18 +111,19 @@ class DB {
   }
 
 //Note:
-  static Future<int> createNote(
-    int userId,
-    String note,
-    String location,
-    String? date,
-  ) async {
+  static Future<int> createNote(int userId, String note, String location,
+      String? date, Duration expireInterval) async {
     final Database database = await getDatabase();
+
+    final currentTime = DateTime.now();
+    final expireTime = currentTime.add(expireInterval);
+
     final data = {
       'user_id': userId,
       'note': note,
       'location': location,
-      'date': date
+      'date': date,
+      'expire_timestamp': expireTime,
     };
     final id = await database.insert('note', data,
         conflictAlgorithm: ConflictAlgorithm.replace);

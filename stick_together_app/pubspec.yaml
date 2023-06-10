@@ -37,9 +37,10 @@ dependencies:
   flutter_map: ^4.0.0
   latlong2: ^0.8.2
   google_maps_flutter: ^2.2.8
-  sqflite: ^2.2.8+4
+  sqflite: ^2.0.0
   path_provider: ^2.0.15
   path: ^1.8.2
+  sqflite_common_ffi: ^2.2.5
 
 dev_dependencies:
   flutter_test:
