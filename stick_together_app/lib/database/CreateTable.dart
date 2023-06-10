@@ -40,8 +40,7 @@ class DB {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         user_name TEXT,
         email TEXT,
-        password TEXT,
-        phone TEXT,
+        password TEXT
         )
         """);
 
@@ -66,7 +65,6 @@ class DB {
       'user_name': userName,
       'email': email,
       'password': password,
-      'phone': phone,
     };
     final Database database = await getDatabase();
     final id = await database.insert('account', data,
@@ -102,7 +100,6 @@ class DB {
       'user_name': userName,
       'email': email,
       'password': password,
-      'phone': phone,
     };
     final result = await database
         .update('account', data, where: "id = ?", whereArgs: [id]);
