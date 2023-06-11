@@ -27,8 +27,6 @@ class _LoginPageState extends State<LoginPage> {
     WidgetsFlutterBinding.ensureInitialized();
     final data =
         await DB.getAccount(_usernameController.text, _passwordController.text);
-    print('AQUIIIIIIIIII\n');
-    print(data);
     await _secureStorage.write(
         key: 'username', value: _usernameController.text);
     // ignore: unrelated_type_equality_checks

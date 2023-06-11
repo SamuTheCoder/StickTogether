@@ -57,6 +57,16 @@ class DB {
       FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
       )
         """);
+
+    await db.execute("""CREATE TABLE profilDescr( 
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      description TEXT,
+      tag TEXT,
+      phone TEXT,
+      user_id INTEGER,
+      FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
+      )
+        """);
   }
 
   /// initialize the database
@@ -105,6 +115,14 @@ class DB {
       'email': email,
       'password': password,
     };
+    final result = await database
+        .update('account', data, where: "id = ?", whereArgs: [id]);
+    return result;
+  }
+
+  static Future<int> updateName(int id, String userName) async {
+    final Database database = await getDatabase();
+    final data = {'user_name': userName};
     final result = await database
         .update('account', data, where: "id = ?", whereArgs: [id]);
     return result;
@@ -160,5 +178,40 @@ class DB {
     } catch (err) {
       debugPrint(err.toString());
     }
+  }
+
+  //Description
+  static Future<int> createDescription(
+      String? description, String? tag, String? phone, int user_id) async {
+    //await _initDatabase();
+    //final Database db = await DB.instance.database;
+    final data = {
+      'description': description,
+      'tag': tag,
+      'phone': phone,
+      'user_id': user_id,
+    };
+    final Database database = await getDatabase();
+    final id = await database.insert('profilDescr', data,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    return id;
+  }
+
+  static Future<List<Map<String, dynamic>>> getDescri() async {
+    final Database database = await getDatabase();
+    return database.query('profilDescr');
+  }
+
+  static Future<int> updateDescri(
+    int id,
+    String? description,
+    String? tag,
+    String? phone,
+  ) async {
+    final Database database = await getDatabase();
+    final data = {'description': description, 'tag': tag, 'phone': phone};
+    final result = await database
+        .update('profilDescr', data, where: "id = ?", whereArgs: [id]);
+    return result;
   }
 }

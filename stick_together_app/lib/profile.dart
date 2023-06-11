@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stick_together_app/edit_profile_page.dart';
 import 'package:stick_together_app/login_page.dart';
+
+import 'components/tags_list.dart';
+import 'database/CreateTable.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,9 +18,42 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  List<Tag> selectedTags = [];
+  //List<Map<String, dynamic>> _descr = []; //Map to keep description;
+  String? name;
+  late int user_id;
+  late String descr, photo, tag;
+
+  Future<bool> _isLoggedIn() async {
+    final String? username = await _secureStorage.read(key: 'username');
+    final data = await DB.getUser(username!);
+    name = username;
+    user_id = data[0] as int;
+    return username != null;
+  }
+
+  Future<void> getDescr() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final data = await DB.getDescri();
+    setState(() {
+      descr = data[1] as String;
+      tag = data[2] as String;
+      photo = data[3] as String;
+      selectedTags = json.decode(tag);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoggedIn();
+    getDescr();
+    // DB._initDatabase(); // Initialize the database when the widget is created
+  }
 
   @override
   Widget build(BuildContext context) {
+    //var item;
     return Container(
       margin: const EdgeInsets.all(15.0),
       child: Column(children: [
@@ -59,18 +97,20 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(
           height: 10,
         ),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Center(
               child: Text(
-            "John Doe",
-            style: TextStyle(fontSize: 30.0),
+            name!,
+            style: const TextStyle(fontSize: 30.0),
           )),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
-          Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-              textAlign: TextAlign.justify),
+          Center(
+            child: Text(descr,
+                //style: const TextStyle(fontSize: 30.0),
+                textAlign: TextAlign.justify),
+          ),
         ]),
         const SizedBox(
           height: 20,
@@ -85,7 +125,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     Wrap(
                       spacing: 8.0,
                       direction: Axis.horizontal,
-                      children: const [
+                      children: [
+                        for (Tag i in selectedTags)
+                          Chip(
+                            label: Text(i.name),
+                            backgroundColor: i.color,
+                          ),
+                      ],
+
+                      /*
+                      selectedTags.for((element) {
+                                      Chip(
+                                        label: Text(element.name),
+                                        backgroundColor: element.color,
+                                      ),
+                                      })*/
+                      /*
+                      const [
+                        //item: selectedTags.iterator()
                         Chip(
                           label: Text("Beer"),
                           backgroundColor: Colors.amber,
@@ -106,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           label: Text("Study Together"),
                           backgroundColor: Colors.purple,
                         ),
-                      ],
+                      ],*/
                     ),
                   ]),
             )
