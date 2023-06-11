@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stick_together_app/edit_profile_page.dart';
+import 'package:stick_together_app/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,10 +12,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15.0),
+      margin: const EdgeInsets.all(15.0),
       child: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -23,23 +27,39 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditProfilePage(),
+                        builder: (context) => const EditProfilePage(),
                       ));
                 },
-                icon: Icon(Icons.edit))
+                icon: const Icon(Icons.edit))
           ],
         ),
-        Align(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+                onPressed: () async {
+                  await _secureStorage.delete(key: 'username');
+                  // ignore: use_build_context_synchronously
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ));
+                },
+                icon: const Icon(Icons.logout))
+          ],
+        ),
+        const Align(
           alignment: Alignment.topCenter,
           child: CircleAvatar(
             radius: 65.0,
             backgroundImage: null,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
           Center(
               child: Text(
             "John Doe",
@@ -52,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
               textAlign: TextAlign.justify),
         ]),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Row(
@@ -65,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Wrap(
                       spacing: 8.0,
                       direction: Axis.horizontal,
-                      children: [
+                      children: const [
                         Chip(
                           label: Text("Beer"),
                           backgroundColor: Colors.amber,
@@ -92,11 +112,11 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20.0,
         ),
         Column(
-          children: [
+          children: const [
             Text(
               "Friends: ",
               style: TextStyle(fontSize: 25.0),
