@@ -29,6 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
       final String email = _emailController.text.trim();
       final String password = _passwordController.text.trim();
       String profileDescription = 'Default Description';
+      List<int>? selectedTags;
 
       if (_passwordController.text != _repeatPasswordController.text) {
         throw 'Password Mismatch';
@@ -40,7 +41,8 @@ class _RegisterPageState extends State<RegisterPage> {
             username: username,
             email: email,
             password: password,
-            profileDescription: profileDescription);
+            profileDescription: profileDescription,
+            selectedTags: selectedTags);
 
         final CollectionReference usersCollection =
             FirebaseFirestore.instance.collection('users');

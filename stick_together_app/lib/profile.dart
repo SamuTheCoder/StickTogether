@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stick_together_app/edit_profile_page.dart';
 import 'package:stick_together_app/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login_page.dart';
 
 import 'components/tags_list.dart';
 
@@ -19,13 +22,39 @@ class _ProfilePageState extends State<ProfilePage> {
   //List<Map<String, dynamic>> _descr = []; //Map to keep description;
   String? name;
   late int user_id;
-  late String? descr = '', photo, tag;
+  late String? descr = '';
 
   @override
   void initState() {
     super.initState();
-
+    fetchUserData();
     // DB._initDatabase(); // Initialize the database when the widget is created
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (snapshot.exists) {
+          Map<String, dynamic> userData =
+              snapshot.data() as Map<String, dynamic>;
+          setState(() {
+            name = userData['username'];
+            descr = userData['profileDescription'];
+            List<int>? selectedTagIndexes =
+                List<int>.from(userData['selectedTags']);
+            selectedTags =
+                selectedTagIndexes.map((index) => tagsList[index]).toList();
+          });
+        }
+      }
+    } catch (e) {
+      print('Could not get user data: $e');
+    }
   }
 
   @override
@@ -101,45 +130,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     Wrap(
                       spacing: 8.0,
                       direction: Axis.horizontal,
-                      children: [
-                        for (Tag i in selectedTags)
-                          Chip(
-                            label: Text(i.name),
-                            backgroundColor: i.color,
-                          ),
-                      ],
-
-                      /*
-                      selectedTags.for((element) {
-                                      Chip(
-                                        label: Text(element.name),
-                                        backgroundColor: element.color,
-                                      ),
-                                      })*/
-                      /*
-                      const [
-                        //item: selectedTags.iterator()
-                        Chip(
-                          label: Text("Beer"),
-                          backgroundColor: Colors.amber,
-                        ),
-                        Chip(
-                          label: Text("Football"),
-                          backgroundColor: Colors.green,
-                        ),
-                        Chip(
-                          label: Text("Movies/Cinema"),
-                          backgroundColor: Colors.cyan,
-                        ),
-                        Chip(
-                          label: Text("Parties"),
-                          backgroundColor: Colors.pink,
-                        ),
-                        Chip(
-                          label: Text("Study Together"),
-                          backgroundColor: Colors.purple,
-                        ),
-                      ],*/
+                      children: selectedTags.map((tag) {
+                        return Chip(
+                          label: Text(tag.name),
+                          backgroundColor: tag.color,
+                        );
+                      }).toList(),
                     ),
                   ]),
             )

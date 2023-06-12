@@ -4,6 +4,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:stick_together_app/components/tags_list.dart';
+import 'package:stick_together_app/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -26,8 +29,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-
+    fetchUserData();
     // DB._initDatabase(); // Initialize the database when the widget is created
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (snapshot.exists) {
+          Map<String, dynamic> userData =
+              snapshot.data() as Map<String, dynamic>;
+          setState(() {
+            _descriptionController.text = userData['profileDescription'];
+            List<int>? selectedTagIndexes =
+                List<int>.from(userData['selectedTags']);
+            selectedTags =
+                selectedTagIndexes.map((index) => tagsList[index]).toList();
+          });
+        }
+      }
+    } catch (e) {
+      print('Could not get user data: $e');
+    }
+  }
+
+  Future<void> updateUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String description = _descriptionController.text;
+        List<int> selectedTagsIndexes =
+            selectedTags.map((tag) => tagsList.indexOf(tag)).toList();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'profileDescription': description,
+          'selectedTags': selectedTagsIndexes,
+        });
+      }
+      fetchUserData();
+    } catch (e) {}
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -49,60 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             const SizedBox(
               height: 20,
             ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1),
-                    borderRadius: BorderRadius.circular(5)),
-                child: TextFormField(
-                  controller: _userController,
-                  validator: (value) {
-                    //Verificar se o user já exite!
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a username if you would like edit it!';
-                    }
-                    return null;
-                  },
-                  obscureText: false,
-                  style: const TextStyle(fontSize: 15),
-                  decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber)),
-                    hintText: "User Name",
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1),
-                    borderRadius: BorderRadius.circular(5)),
-                child: TextFormField(
-                  controller: _phoneController,
-                  obscureText: false,
-                  style: const TextStyle(fontSize: 15),
-                  decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber)),
-                    hintText: "phone",
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+
             const SizedBox(
               height: 8,
             ),
@@ -123,6 +118,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               child: TextField(
                 controller: _descriptionController,
+                onEditingComplete: () {
+                  updateUserData();
+                },
                 obscureText: false,
                 maxLines: 3,
                 style: const TextStyle(fontSize: 15),
@@ -185,7 +183,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.amber)),
-                  onPressed: () {
+                  onPressed: () async {
+                    updateUserData();
                     Navigator.pop(context);
                   },
                   child: const Text("Save")),
@@ -195,6 +194,4 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
-
-  Widget buildChips() => Chip(label: Text("bla"));
 }
