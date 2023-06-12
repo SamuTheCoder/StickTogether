@@ -1,11 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:stick_together_app/UserModel.dart';
 import 'package:stick_together_app/components/textfield.dart';
 import 'package:stick_together_app/home_page.dart';
-
-import 'database/CreateTable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -20,58 +18,56 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _repeatPasswordController = TextEditingController();
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
-  //RegisterPage({super.key});
-  List<Map<String, dynamic>> _account = []; //Map to keep user;
-  bool _isloading = true;
-
-  void _refreshaAccount() async {
-    //final database = await DB._initDatabase();
-    final data = await DB.getAccounts();
-    setState(() {
-      _account = data;
-      _isloading = false;
-    });
-  }
-
-  Future<bool> _addUser(BuildContext context) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final data = await DB.getUser(_nameController.text);
-    if (data.isEmpty) {
-      await DB.createAccount(_nameController.text, _emailController.text,
-          _passwordController.text, '000000000');
-      await _secureStorage.write(key: 'username', value: _nameController.text);
-      _refreshaAccount();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool validatePassw(String value) {
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = RegExp(pattern);
-    return regExp.hasMatch(value);
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _repeatPasswordController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // DB._initDatabase(); // Initialize the database when the widget is created
-  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final _formKey = GlobalKey<FormState>();
+
+  Future<void> _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      final String username = _nameController.text.trim();
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
+      String profileDescription = 'Default Description';
+
+      if (_passwordController.text != _repeatPasswordController.text) {
+        throw 'Password Mismatch';
+      }
+      try {
+        final UserCredential userCredential = await _auth
+            .createUserWithEmailAndPassword(email: email, password: password);
+        final UserModel user = UserModel(
+            username: username,
+            email: email,
+            password: password,
+            profileDescription: profileDescription);
+
+        final CollectionReference usersCollection =
+            FirebaseFirestore.instance.collection('users');
+        await usersCollection.doc(userCredential.user!.uid).set(user.toMap());
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('User Registered'),
+          duration: const Duration(seconds: 2),
+        ));
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      } catch (error) {
+        String errorMessage;
+
+        if (error == 'Password Mismatch')
+          errorMessage = 'Password Mismatch';
+        else
+          errorMessage = "An error has occured";
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(errorMessage),
+          duration: const Duration(seconds: 2),
+        ));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     validator: (value) {
                       if (value == null ||
                           value.isEmpty ||
-                          !value.contains('@') ||
-                          !value.contains(".")) {
+                          !value.contains('@')) {
                         return 'Please enter a valid email';
                       }
                       return null;
@@ -176,10 +171,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a password';
-                      } else if (value.length < 8) {
-                        return 'Password must be at least 8 characters long ';
-                      } else if (!validatePassw(value)) {
-                        return 'Password must have:\nMinimum 1 capital letter,\nMinimum 1 lowercase letter\nMinimum 1 Numeric Number\nMinimum 1 special character\nCommon permission character (!@#\$&*~)';
                       }
                       return null;
                     },
@@ -239,23 +230,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.amber)),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        bool done = await _addUser(context);
-                        if (done) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (localContext) => const HomePage()));
-                        } else {
-                          _passwordController.clear();
-                          _repeatPasswordController.clear();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('User already exists'),
-                                  duration: Duration(seconds: 2)));
-                        }
-                      }
+                    onPressed: () {
+                      _registerUser();
                     },
                     child: const Text("Sign up")),
               ),

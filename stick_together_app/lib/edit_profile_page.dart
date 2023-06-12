@@ -3,10 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stick_together_app/components/tags_list.dart';
-
-import 'database/CreateTable.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -19,7 +16,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _descriptionController = TextEditingController();
   final _userController = TextEditingController();
   final _phoneController = TextEditingController();
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   List<Tag> selectedTags = [];
   //List<Map<String, dynamic>> _descr = []; //Map to keep description;
   String? name;
@@ -27,53 +23,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   //late String descr, photo, tag;
   //final descr = _descriptionController.text;
 
-  Future<bool> _isLoggedIn() async {
-    final String? username = await _secureStorage.read(key: 'username');
-    final data = await DB.getUser(username!);
-    name = username;
-    user_id = data[0] as int;
-    return username != null;
-  }
-
-  Future<void> createDescription() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final String datajson = json.encode(selectedTags);
-    await DB.createDescription(
-        _descriptionController.text, datajson, _phoneController.text, user_id);
-  }
-
-  Future<void> updateDescription() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final String datajson = json.encode(selectedTags);
-    await DB.updateDescri(
-        1, _descriptionController.text, datajson, _phoneController.text);
-  }
-
-  Future<bool> updateName() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final data = await DB.getUser(_userController.text);
-    if (data.isEmpty) {
-      await DB.updateName(user_id, _userController.text);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Future<bool> editOrCreateDescr() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final data = await DB.getDescri();
-    if (data.isNotEmpty) {
-      return true; //edit
-    } else {
-      return false; //create
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _isLoggedIn();
 
     // DB._initDatabase(); // Initialize the database when the widget is created
   }
@@ -233,22 +185,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.amber)),
-                  onPressed: () async {
-                    bool haveDescr = await editOrCreateDescr();
-                    if (haveDescr) {
-                      await updateDescription();
-                    } else {
-                      await createDescription();
-                    }
-                    if (_formKey.currentState!.validate()) {
-                      bool done = await updateName();
-                      if (!done) {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                'Already exists user with this user name.\nPlease use other!'),
-                            duration: Duration(seconds: 2)));
-                      }
-                    }
+                  onPressed: () {
                     Navigator.pop(context);
                   },
                   child: const Text("Save")),

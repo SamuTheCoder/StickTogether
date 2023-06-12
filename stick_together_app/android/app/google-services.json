@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "499418815884",
+    "project_id": "stick-together-89dd2",
+    "storage_bucket": "stick-together-ed715.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499418815884:android:3d63ff6db0867a6ddd8aa9",
+        "android_client_info": {
+          "package_name": "com.example.stick_together_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499418815884-cdngas6ve2ab6vk2p51cf4hosphclqke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6WYzuCQJoawcBDsXCXTT6wxMRYbaVMjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499418815884-cdngas6ve2ab6vk2p51cf4hosphclqke.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "499418815884-gt8r6o02pmfq363gs6m69c3t2tqgevn2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.stickTogetherApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

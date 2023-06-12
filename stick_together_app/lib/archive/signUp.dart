@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:stick_together_app/components/router.dart';
 import 'package:http/http.dart' as http;
 
-class SiginService {
+class SigInService {
   signUp(String email, String password) async {
     //Uri uri = Uri.https(Router())
     http.Response response = await http.post(
