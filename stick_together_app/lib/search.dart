@@ -26,11 +26,14 @@ class _SearchPageState extends State<SearchPage> {
         .snapshots();
     return Scaffold(
       appBar: AppBar(
+        
         title: Container(
+        
           padding: const EdgeInsets.only(
             left: 20,
             right: 10,
           ),
+          
           child: TextField(
             controller: seachtf,
             decoration: const InputDecoration(

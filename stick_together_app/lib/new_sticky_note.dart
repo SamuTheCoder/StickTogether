@@ -57,14 +57,12 @@ class _NewStickyPageState extends State<NewStickyPage> {
         }
       }
 
-      print("oiiiiiiii: " + temp);
+   
       //int tp = temp as int;
       Duration expireInterval = Duration(minutes: int.parse(temp));
-      print("AQUIIIIII: " + expireInterval.toString());
       final currentTime = DateTime.now();
 
       final expireTime = currentTime.add(expireInterval);
-      print("AlUIIIIII: " + expireTime.toString());
       if (positionLocation != null) {
         point = GeoPoint(positionLocation.latitude, positionLocation.longitude);
       }

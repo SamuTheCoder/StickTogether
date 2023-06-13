@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:stick_together_app/map_page.dart';
 import 'package:stick_together_app/new_sticky_note.dart';
 import 'package:stick_together_app/profile.dart';
+import 'package:stick_together_app/search.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  final _pages = [MapPage(), NewStickyPage(), ProfilePage()];
+  final _pages = [MapPage(), NewStickyPage(), ProfilePage(), SearchPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +36,8 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.sticky_note_2), label: "New Sticky Note"),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_outline), label: "Profile"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search), label: "People"),
         ],
         onTap: (index) {
           setState(() {
