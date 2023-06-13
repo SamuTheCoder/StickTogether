@@ -42,35 +42,54 @@ class _NewStickyPageState extends State<NewStickyPage> {
       final String nota = _descriptionController.text.trim();
       late GeoPoint point;
       String temp = _currentTimeSpan as String;
-      temp = temp.replaceAll(" minutes", "");
-      //int tp = temp as int;
-      Duration expireInterval = temp as Duration;
+      print(temp);
+      String hor = "0";
+      if (temp.contains("minutes")) {
+        temp = temp.replaceAll(" minutes", "");
+      } else {
+        if (temp.contains("hours")) {
+          temp = temp.replaceAll(" hours", "");
+        } else if (temp.contains("hour")) {
+          temp = temp.replaceAll(" hour", "");
+        } else {
+          temp = temp.replaceAll(" secound", "");
+          temp = temp.replaceAll(" secounds", "");
+        }
+      }
 
+      print("oiiiiiiii: " + temp);
+      //int tp = temp as int;
+      Duration expireInterval = Duration(minutes: int.parse(temp));
+      print("AQUIIIIII: " + expireInterval.toString());
       final currentTime = DateTime.now();
+
       final expireTime = currentTime.add(expireInterval);
+      print("AlUIIIIII: " + expireTime.toString());
       if (positionLocation != null) {
         point = GeoPoint(positionLocation.latitude, positionLocation.longitude);
       }
 
       try {
+        User? user = FirebaseAuth.instance.currentUser;
         final NoteModel note = NoteModel(
             note: nota,
             location: point,
-            expireTime: expireTime as int,
-            userId: 0); //coloquei 0 atualizar isso!
+            expireTime: expireTime,
+            userId: user!.uid); //coloquei 0 atualizar isso!
         //Falta receber o correntUser
         final CollectionReference usersCollection =
             FirebaseFirestore.instance.collection('note');
-        await usersCollection.doc(userCredential.user!.uid).set(note.toMap());
+        await usersCollection.doc(user!.uid).set(note.toMap());
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('User Registered'),
+          content: Text('Stick Note Created'),
           duration: Duration(seconds: 2),
         ));
 
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       } catch (error) {
+        print(error);
         String errorMessage = "An error has occured";
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -97,12 +116,12 @@ class _NewStickyPageState extends State<NewStickyPage> {
       });
       positionStream =
           Geolocator.getPositionStream().listen((Position position) async {
-        if (positionLocation == null) {
-          positionLocation = position;
-          setState(() {
-            status = 'Localização obtida';
-          });
-        }
+        //if (positionLocation == null) {
+        positionLocation = position;
+        setState(() {
+          status = 'Localização obtida';
+        });
+        // }
       });
     }
   }
@@ -190,12 +209,20 @@ class _NewStickyPageState extends State<NewStickyPage> {
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.amber)),
-                    onPressed: () {},
+                    onPressed: () {
+                      _createNote();
+                    },
                     child: const Text("Create Sticky Note")),
               )
             ],
           ),
         ));
+  }
+
+  @override
+  void dispose() {
+    positionStream.cancel();
+    super.dispose();
   }
 
   DropdownMenuItem<String> buildMenuItem(String time) =>

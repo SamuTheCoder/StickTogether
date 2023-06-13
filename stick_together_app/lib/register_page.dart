@@ -35,6 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
         throw 'Password Mismatch';
       }
       try {
+        List<String> friend = [];
         final UserCredential userCredential = await _auth
             .createUserWithEmailAndPassword(email: email, password: password);
         final UserModel user = UserModel(
@@ -42,7 +43,8 @@ class _RegisterPageState extends State<RegisterPage> {
             email: email,
             password: password,
             profileDescription: profileDescription,
-            selectedTags: selectedTags);
+            selectedTags: selectedTags,
+            friends: friend);
 
         final CollectionReference usersCollection =
             FirebaseFirestore.instance.collection('users');

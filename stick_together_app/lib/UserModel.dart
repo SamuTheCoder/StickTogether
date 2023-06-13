@@ -4,13 +4,15 @@ class UserModel {
   final String password;
   String profileDescription;
   List<int>? selectedTags;
+  List<String>? friends;
 
   UserModel(
       {required this.username,
       required this.email,
       required this.password,
       required this.profileDescription,
-      required this.selectedTags});
+      required this.selectedTags,
+      required this.friends});
 
   Map<String, dynamic> toMap() {
     return {
@@ -18,7 +20,8 @@ class UserModel {
       'email': email,
       'password': password,
       'profileDescription': profileDescription,
-      'selectedTags': selectedTags
+      'selectedTags': selectedTags,
+      'friends': friends
     };
   }
 }
