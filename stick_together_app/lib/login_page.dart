@@ -42,145 +42,147 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 70,
-              ),
-              Text("StickTogether",
-                  style: TextStyle(color: Colors.amber, fontSize: 30)),
-              SizedBox(
-                height: 50,
-              ),
-              //Introduction
-              Text("Welcome Back :P", style: TextStyle(fontSize: 23)),
-              //fill texts
-              SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: TextField(
-                    controller: _emailController,
-                    obscureText: false,
-                    style: TextStyle(fontSize: 15),
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.amber)),
-                      hintText: "Email",
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 70,
+                ),
+                Text("StickTogether",
+                    style: TextStyle(color: Colors.amber, fontSize: 30)),
+                SizedBox(
+                  height: 50,
+                ),
+                //Introduction
+                Text("Welcome Back :P", style: TextStyle(fontSize: 23)),
+                //fill texts
+                SizedBox(
+                  height: 50,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TextField(
+                      controller: _emailController,
+                      obscureText: false,
+                      style: TextStyle(fontSize: 15),
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.amber)),
+                        hintText: "Email",
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    style: TextStyle(fontSize: 15),
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.amber)),
-                      hintText: "Password",
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      style: TextStyle(fontSize: 15),
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.amber)),
+                        hintText: "Password",
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              //forgot password
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [const Text("forgot password")],
+                //forgot password
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              //row
-              const SizedBox(
-                height: 10,
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [const Text("forgot password")],
+                  ),
+                ),
+                //row
+                const SizedBox(
+                  height: 10,
+                ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //login button
-                  SizedBox(
-                    width: 90,
-                    height: 40,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.amber)),
-                        onPressed: () {
-                          _loginUser();
-                        },
-                        child: const Text("Sign In")),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  //register button
-                  SizedBox(
-                    width: 90,
-                    height: 40,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.amber)),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RegisterPage()));
-                        },
-                        child: const Text("Sign Up")),
-                  ),
-                ],
-              ),
-
-              //login with google
-              SizedBox(
-                height: 200,
-              ),
-              SizedBox(
-                width: 220,
-                height: 25,
-                child: Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white)),
-                        onPressed: () {},
-                        icon: Image.asset('images/google.png'),
-                        label: const Text(
-                          "Sign in with Google",
-                        )),
+                    //login button
+                    SizedBox(
+                      width: 90,
+                      height: 40,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.amber)),
+                          onPressed: () {
+                            _loginUser();
+                          },
+                          child: const Text("Sign In")),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    //register button
+                    SizedBox(
+                      width: 90,
+                      height: 40,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.amber)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPage()));
+                          },
+                          child: const Text("Sign Up")),
+                    ),
                   ],
                 ),
-              ),
-            ],
+
+                //login with google
+                SizedBox(
+                  height: 200,
+                ),
+                SizedBox(
+                  width: 220,
+                  height: 25,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
+                          onPressed: () {},
+                          icon: Image.asset('images/google.png'),
+                          label: const Text(
+                            "Sign in with Google",
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

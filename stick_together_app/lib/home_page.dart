@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        automaticallyImplyLeading: false,
         title: const Text("StickTogether",
             style: TextStyle(
               color: Colors.amber,
@@ -36,8 +37,7 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.sticky_note_2), label: "New Sticky Note"),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_outline), label: "Profile"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search), label: "People"),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "People"),
         ],
         onTap: (index) {
           setState(() {

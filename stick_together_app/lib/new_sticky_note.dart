@@ -57,7 +57,6 @@ class _NewStickyPageState extends State<NewStickyPage> {
         }
       }
 
-   
       //int tp = temp as int;
       Duration expireInterval = Duration(minutes: int.parse(temp));
       final currentTime = DateTime.now();
@@ -77,7 +76,7 @@ class _NewStickyPageState extends State<NewStickyPage> {
         //Falta receber o correntUser
         final CollectionReference usersCollection =
             FirebaseFirestore.instance.collection('note');
-        await usersCollection.doc(user!.uid).set(note.toMap());
+        await usersCollection.doc().set(note.toMap());
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Stick Note Created'),

@@ -36,17 +36,34 @@ class _MapPageState extends State<MapPage> {
                 onTap: () {
                   showModalBottomSheet(
                       context: context,
-                      builder: (context) => Column(
-                            children: [
-                              Text(note.note),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(username)
-                            ],
-                          ));
+                      builder: (context) => Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15))),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(username,
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.amber)),
+                                Text(note.note,
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black)),
+                                SizedBox(height: 8),
+                              ],
+                            ),
+                          )));
                 },
-                child: Icon(Icons.pin_drop, color: Colors.red)));
+                child: Icon(
+                  Icons.pin_drop,
+                  color: Colors.red,
+                  size: 35,
+                )));
       }).toList());
       setState(() {
         markers = updateMarkers;

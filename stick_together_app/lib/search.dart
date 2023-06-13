@@ -33,6 +33,7 @@ class _SearchPageState extends State<SearchPage> {
     return Material(
         child: Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Container(
           padding: const EdgeInsets.only(
             left: 20,
