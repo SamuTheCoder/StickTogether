@@ -5,6 +5,7 @@ import 'package:stick_together_app/components/tags_list.dart';
 import 'package:stick_together_app/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stick_together_app/profile.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -15,25 +16,28 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController seachtf = TextEditingController();
+  void _navagato() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ProfilePage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
         .collection('users')
         .where(
           'username',
-          isEqualTo: seachtf.text,
+          isEqualTo: seachtf.text.trim(),
         )
         .snapshots();
-    return Scaffold(
+    return Material(
+        child: Scaffold(
       appBar: AppBar(
-        
         title: Container(
-        
           padding: const EdgeInsets.only(
             left: 20,
             right: 10,
           ),
-          
           child: TextField(
             controller: seachtf,
             decoration: const InputDecoration(
@@ -69,6 +73,9 @@ class _SearchPageState extends State<SearchPage> {
                     title: Text(
                       snapshot.data!.docChanges[index].doc['username'],
                     ),
+                    onTap: () {
+                      // _navagato();
+                    },
                   ),
                 );
               },
@@ -76,6 +83,6 @@ class _SearchPageState extends State<SearchPage> {
           );
         },
       ),
-    );
+    ));
   }
 }
