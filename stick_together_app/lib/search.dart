@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:stick_together_app/components/tags_list.dart';
+import 'package:stick_together_app/friendProfile.dart';
+import 'package:stick_together_app/home_page.dart';
 import 'package:stick_together_app/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,11 +17,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController seachtf = TextEditingController();
-  void _navagato() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProfilePage()));
-  }
-
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
@@ -34,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
         child: Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.blue,
         title: Container(
           padding: const EdgeInsets.only(
             left: 20,
@@ -70,13 +67,21 @@ class _SearchPageState extends State<SearchPage> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (_, index) {
                 return Card(
-                  child: ListTile(
-                    title: Text(
-                      snapshot.data!.docChanges[index].doc['username'],
-                    ),
+                  child: GestureDetector(
                     onTap: () {
-                      // _navagato();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FriendProfilePage(
+                                  userId: snapshot
+                                      .data!.docChanges[index].doc['userId'])));
                     },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        snapshot.data!.docChanges[index].doc['username'],
+                      ),
+                    ),
                   ),
                 );
               },

@@ -131,9 +131,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       spacing: 8.0,
                       direction: Axis.horizontal,
                       children: selectedTags.map((tag) {
-                        return Chip(
-                          label: Text(tag.name),
-                          backgroundColor: tag.color,
+                        return Material(
+                          child: Chip(
+                            label: Text(tag.name),
+                            backgroundColor: tag.color,
+                          ),
                         );
                       }).toList(),
                     ),

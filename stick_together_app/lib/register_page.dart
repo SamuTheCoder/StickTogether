@@ -44,7 +44,8 @@ class _RegisterPageState extends State<RegisterPage> {
             password: password,
             profileDescription: profileDescription,
             selectedTags: selectedTags,
-            friends: friend);
+            friends: friend,
+            userId: userCredential.user!.uid);
 
         final CollectionReference usersCollection =
             FirebaseFirestore.instance.collection('users');
