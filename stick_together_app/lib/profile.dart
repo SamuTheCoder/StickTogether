@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:stick_together_app/edit_profile_page.dart';
 import 'package:stick_together_app/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String? name;
   late int user_id;
   late String? descr = '';
+  List<String> amigo = [];
+  Map<int, String> myfriend = {};
 
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
           setState(() {
             name = userData['username'];
             descr = userData['profileDescription'];
+            amigo = List<String>.from(userData['friends']);
             List<int>? selectedTagIndexes =
                 List<int>.from(userData['selectedTags']);
             selectedTags =
@@ -57,9 +61,30 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> readFriend() async {
+    for (var i = 0; i < amigo.length; i++) {
+      String userIdF = amigo[i];
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userIdF)
+          .get();
+      String usName = '';
+      if (snapshot.exists) {
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+        if (mounted) {
+          setState(() {
+            usName = userData['username'];
+          });
+        }
+      }
+      myfriend.addAll({i: usName});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //var item;
+    readFriend();
     return Container(
       margin: const EdgeInsets.all(15.0),
       child: Column(children: [
@@ -92,13 +117,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 icon: const Icon(Icons.logout))
           ],
         ),
-        const Align(
-          alignment: Alignment.topCenter,
-          child: CircleAvatar(
-            radius: 65.0,
-            backgroundImage: null,
-          ),
-        ),
+        Align(
+            alignment: Alignment.topCenter,
+            child: ProfilePicture(
+              name: name ?? 'Loading',
+              fontsize: 30,
+              radius: 35,
+            )),
         const SizedBox(
           height: 10,
         ),
@@ -147,18 +172,26 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 20.0,
         ),
         Column(
-          children: const [
-            Text(
+          children: [
+            const Text(
               "Friends: ",
               style: TextStyle(fontSize: 25.0),
             ),
-            SizedBox(
-              height: 5.0,
+            const SizedBox(
+              height: 10.0,
             ),
-            Text(
-              "19",
-              style: TextStyle(fontSize: 25.0),
-            )
+            Wrap(
+              spacing: 10.0,
+              direction: Axis.horizontal,
+              children: myfriend.entries.map((k) {
+                return Material(
+                  child: Chip(
+                    label: Text(k.value),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ]),

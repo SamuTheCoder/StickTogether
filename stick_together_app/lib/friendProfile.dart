@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:path/path.dart';
 import 'package:stick_together_app/edit_profile_page.dart';
 import 'package:stick_together_app/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,12 +31,19 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   late int user_id;
   late String? descr = '';
   late List<String>? friend = [];
+  List<String> amigo = [];
+  Map<int, String> myfriend = {};
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
     // DB._initDatabase(); // Initialize the database when the widget is created
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<void> fetchUserData() async {
@@ -48,11 +57,11 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
         if (snapshot.exists) {
           Map<String, dynamic> userData =
               snapshot.data() as Map<String, dynamic>;
-          print(
-              'User data: $userData'); // Add print statement to check user data
           setState(() {
             name = userData['username'];
             descr = userData['profileDescription'];
+            amigo = List<String>.from(userData['friends']);
+
             //friend = userData['friends'];
             List<int>? selectedTagIndexes =
                 List<int>.from(userData['selectedTags']);
@@ -66,7 +75,27 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
     }
   }
 
-  Future<void> addFriend() async {
+  Future<void> readFriend() async {
+    for (var i = 0; i < amigo.length; i++) {
+      String userIdF = amigo[i];
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userIdF)
+          .get();
+      String usName = '';
+      if (snapshot.exists) {
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+        if (mounted) {
+          setState(() {
+            usName = userData['username'];
+          });
+        }
+      }
+      myfriend.addAll({i: usName});
+    }
+  }
+
+  Future<void> addFriend(BuildContext context) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -79,7 +108,14 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
               snapshot.data() as Map<String, dynamic>;
           setState(() {
             friend = List<String>.from(userData['friends']);
-            friend!.add(widget.userId);
+            if (!friend!.contains(widget.userId)) {
+              friend!.add(widget.userId);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('He is your friend'),
+                duration: Duration(seconds: 2),
+              ));
+            }
           });
           List<int>? selectedTagIndexes =
               List<int>.from(userData['selectedTags']);
@@ -110,103 +146,114 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   @override
   Widget build(BuildContext context) {
     //var item;
+    readFriend();
     return Container(
+      color: Colors.grey,
       margin: const EdgeInsets.all(20.0),
-      child: Column(children: [
-        const Align(
-          alignment: Alignment.topCenter,
-          child: CircleAvatar(
-            radius: 50.0,
-            backgroundImage: null,
+      child: SingleChildScrollView(
+        child: Column(children: [
+          const SizedBox(
+            height: 50,
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Center(
-              child: Text(
-            name ?? 'Loading',
-            style: const TextStyle(fontSize: 30.0),
-          )),
+          Align(
+              alignment: Alignment.topCenter,
+              child: ProfilePicture(
+                name: name ?? 'Loading',
+                fontsize: 30,
+                radius: 35,
+              )),
+          const SizedBox(
+            height: 20,
+          ),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Center(
+                child: Text(
+              name ?? 'Loading',
+              style: const TextStyle(fontSize: 30.0),
+            )),
+            const SizedBox(
+              height: 30.0,
+            ),
+            Center(
+              child: Text(descr ?? 'Loading',
+                  style: const TextStyle(fontSize: 30.0, color: Colors.white),
+                  textAlign: TextAlign.justify),
+            ),
+          ]),
+          const SizedBox(
+            height: 40,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Wrap(
+                        spacing: 10.0,
+                        direction: Axis.horizontal,
+                        children: selectedTags.map((tag) {
+                          return Material(
+                            child: Chip(
+                              label: Text(tag.name),
+                              backgroundColor: tag.color,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ]),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Column(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Text(
+                "Friends: ",
+                style: TextStyle(fontSize: 25.0, color: Colors.white),
+              ),
+              const SizedBox(
+                height: 19.0,
+              ),
+              /*
+              Text(
+                amigo ?? "10",
+                style: TextStyle(fontSize: 25.0, color: Colors.white),
+              ),*/
+
+              Wrap(
+                spacing: 10.0,
+                direction: Axis.horizontal,
+                children: myfriend.entries.map((k) {
+                  return Material(
+                    child: Chip(
+                      label: Text(k.value),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
           const SizedBox(
             height: 30.0,
           ),
-          Center(
-            child: Text(descr ?? 'Loading',
-                style: const TextStyle(fontSize: 30.0, color: Colors.white),
-                textAlign: TextAlign.justify),
+          SizedBox(
+            height: 40,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.amber)),
+                onPressed: () {
+                  addFriend(context);
+                },
+                child: const Text("Add Friend")),
           ),
         ]),
-        const SizedBox(
-          height: 40,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Wrap(
-                      spacing: 10.0,
-                      direction: Axis.horizontal,
-                      children: selectedTags.map((tag) {
-                        return Material(
-                          child: Chip(
-                            label: Text(tag.name),
-                            backgroundColor: tag.color,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ]),
-            )
-          ],
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        Column(
-          // ignore: prefer_const_literals_to_create_immutables
-          children: [
-            const Text(
-              "Friends: ",
-              style: TextStyle(fontSize: 25.0, color: Colors.white),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            /*
-            Wrap(
-              spacing: 10.0,
-              direction: Axis.horizontal,
-              children:friends.map((tag) {
-                return Material(
-                  child: Chip(
-                    label: Text(tag.name),
-                    backgroundColor: tag.color,
-                  ),
-                );
-              }).toList(),
-            ),*/
-          ],
-        ),
-        const SizedBox(
-          height: 30.0,
-        ),
-        SizedBox(
-          height: 40,
-          child: ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.amber)),
-              onPressed: () {
-                addFriend();
-                //Navigator.pop(context);
-              },
-              child: const Text("Add Friend")),
-        ),
-      ]),
+      ),
     );
   }
 }

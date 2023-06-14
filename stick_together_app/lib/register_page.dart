@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stick_together_app/UserModel.dart';
@@ -51,9 +53,9 @@ class _RegisterPageState extends State<RegisterPage> {
             FirebaseFirestore.instance.collection('users');
         await usersCollection.doc(userCredential.user!.uid).set(user.toMap());
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('User Registered'),
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         ));
 
         Navigator.push(

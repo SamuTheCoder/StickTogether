@@ -25,6 +25,7 @@ class _MapPageState extends State<MapPage> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       final userId = currentUser.uid;
+
       final notes = await getNotesFromCurrentUser(userId);
 
       final updateMarkers = await Future.wait(notes.map((note) async {
@@ -38,7 +39,7 @@ class _MapPageState extends State<MapPage> {
                       context: context,
                       builder: (context) => Container(
                           padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(15),
@@ -49,17 +50,17 @@ class _MapPageState extends State<MapPage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(username,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 20, color: Colors.amber)),
                                 Text(note.note,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 18, color: Colors.black)),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                               ],
                             ),
                           )));
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.pin_drop,
                   color: Colors.red,
                   size: 35,
